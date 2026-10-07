@@ -11,6 +11,7 @@ It opens as a folded note. Tap it to unfold the question with two boxes: **Yes**
 - **Fair repositioning:** each jump lands inside the viewport with a 16px gutter, at least 140px from where it was, and stays clamped on resize
 - **Confetti** drawn on a `<canvas>` with `requestAnimationFrame`, skipped when `prefers-reduced-motion` is set
 - **Spoiler-safe link preview:** the first screen is a sealed note, and the Open Graph tags only say "Open Me", so the message stays hidden in text-message previews
+- **Live notifications** through [ntfy](https://ntfy.sh): pings sent with `navigator.sendBeacon` when the note is opened, answered, or abandoned (add `#test` to the URL to mute them)
 - **Notebook paper** built entirely from CSS gradients (ruled lines, margin line, fold crease) with Google Fonts handwriting faces
 
 ## Run it

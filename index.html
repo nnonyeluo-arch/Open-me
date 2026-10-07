@@ -167,9 +167,34 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
     "just click Yes 😌"
   ];
   let tries = 0;
+  let answered = false, opened = false;
+
+  // Push notifications via ntfy.sh. Subscribe to this topic in the ntfy app.
+  // Add #test to the URL to try the page without sending notifications.
+  const NTFY_TOPIC = 'openme-9fa111e394d3';
+  const testing = location.hash === '#test';
+  function notify(title, message, tags) {
+    if (testing) return;
+    const url = `https://ntfy.sh/${NTFY_TOPIC}?title=${encodeURIComponent(title)}&tags=${encodeURIComponent(tags)}`;
+    try {
+      if (!(navigator.sendBeacon && navigator.sendBeacon(url, message))) {
+        fetch(url, { method: 'POST', body: message, mode: 'no-cors', keepalive: true }).catch(() => {});
+      }
+    } catch (e) {}
+  }
+  const plural = n => `${n} time${n === 1 ? '' : 's'}`;
+
+  window.addEventListener('pagehide', () => {
+    if (opened && !answered) {
+      notify('She left without answering', `Opened the note and tried to hit No ${plural(tries)}.`, 'hourglass');
+    }
+  });
+
   const ask = document.getElementById('ask');
   const cover = document.getElementById('cover');
   cover.addEventListener('click', () => {
+    if (!opened) notify('She opened the note 👀', 'Reading it right now.', 'eyes');
+    opened = true;
     cover.hidden = true;
     ask.hidden = false;
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) ask.classList.add('opening');
@@ -222,6 +247,10 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
   });
 
   yes.addEventListener('click', () => {
+    if (!answered) {
+      answered = true;
+      notify('SHE SAID YES 🎉', tries ? `After trying to hit No ${plural(tries)}.` : 'Went straight for Yes. No hesitation.', 'tada,heart');
+    }
     document.getElementById('ask').hidden = true;
     no.hidden = true;
     document.getElementById('done').hidden = false;
