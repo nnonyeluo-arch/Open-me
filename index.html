@@ -200,24 +200,42 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
     if (!matchMedia('(prefers-reduced-motion: reduce)').matches) ask.classList.add('opening');
   });
 
+  // Visible screen size (iOS Safari's toolbars make innerHeight unreliable).
+  function viewport() {
+    const vv = window.visualViewport;
+    return {
+      w: Math.min(window.innerWidth, document.documentElement.clientWidth || window.innerWidth),
+      h: vv ? Math.min(vv.height, window.innerHeight) : window.innerHeight
+    };
+  }
+  let lastFlee = 0;
+
   function flee(e) {
     if (e) { e.preventDefault(); e.stopPropagation(); }
+    // One tap fires touchstart + pointerdown + click; count it once.
+    const now = Date.now();
+    if (now - lastFlee < 250) return;
+    lastFlee = now;
     tries++;
     const r = no.getBoundingClientRect();
     if (!no.classList.contains('loose')) {
-      no.style.left = r.left + 'px'; no.style.top = r.top + 'px';
+      // Move the box out of the tilted note. A transformed parent makes
+      // position: fixed relative to the note instead of the screen.
+      document.body.appendChild(no);
       no.classList.add('loose');
+      no.style.left = r.left + 'px'; no.style.top = r.top + 'px';
       void no.offsetWidth;
     }
+    const { w, h } = viewport();
     const pad = 16;
-    const maxX = window.innerWidth - r.width - pad;
-    const maxY = window.innerHeight - r.height - pad;
+    const maxX = Math.max(pad, w - r.width - pad);
+    const maxY = Math.max(pad, h - r.height - pad);
     let x, y, guard = 0;
     do {
-      x = pad + Math.random() * Math.max(0, maxX - pad);
-      y = pad + Math.random() * Math.max(0, maxY - pad);
+      x = pad + Math.random() * (maxX - pad);
+      y = pad + Math.random() * (maxY - pad);
       guard++;
-    } while (guard < 20 && Math.hypot(x - r.left, y - r.top) < 140);
+    } while (guard < 20 && Math.hypot(x - r.left, y - r.top) < 120);
     no.style.left = x + 'px'; no.style.top = y + 'px';
     taunt.textContent = lines[Math.min(tries - 1, lines.length - 1)];
     const s = Math.min(1 + tries * 0.15, 2.2);
@@ -239,12 +257,15 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
     if (Math.hypot(e.clientX - cx, e.clientY - cy) < 70) flee();
   });
 
-  window.addEventListener('resize', () => {
+  function clampNo() {
     if (!no.classList.contains('loose')) return;
     const r = no.getBoundingClientRect();
-    no.style.left = Math.min(r.left, window.innerWidth - r.width - 16) + 'px';
-    no.style.top = Math.min(r.top, window.innerHeight - r.height - 16) + 'px';
-  });
+    const { w, h } = viewport();
+    no.style.left = Math.max(16, Math.min(r.left, w - r.width - 16)) + 'px';
+    no.style.top = Math.max(16, Math.min(r.top, h - r.height - 16)) + 'px';
+  }
+  window.addEventListener('resize', clampNo);
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', clampNo);
 
   yes.addEventListener('click', () => {
     if (!answered) {
