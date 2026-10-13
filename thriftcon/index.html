@@ -113,7 +113,6 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
       <dl>
         <dt>When</dt><dd>Saturday, Dec 5 · 10am–5pm</dd>
         <dt>Where</dt><dd>ThriftCon Houston, Reliant Center Hall D</dd>
-        <dt>Ride</dt><dd>I'm picking you up</dd>
       </dl>
       <div class="actions">
         <button class="btn yes" id="yes" type="button">I'm in</button>
@@ -125,7 +124,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
       <p class="lot"><span>Lot #001</span><span>Sold</span></p>
       <h1>Coupon claimed.</h1>
       <p>Saturday, Dec 5. Start your wishlist now, because $150 goes fast at ThriftCon.</p>
-      <p>I'll text you the pickup time.</p>
+      <p>I'll text you the details.</p>
       <p class="sign">see you there ✶</p>
     </section>
 
@@ -164,7 +163,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
   });
 
   $('yes').addEventListener('click', () => {
-    if (!answered) notify('ThriftCon: SHE SAID YES 🛍️', 'Coupon claimed for Saturday Dec 5. Lock in the pickup time.', 'tada,shopping');
+    if (!answered) notify('ThriftCon: SHE SAID YES 🛍️', 'Coupon claimed for Saturday Dec 5. Lock in a meetup time.', 'tada,shopping');
     answered = true;
     $('invite').hidden = true;
     $('saidYes').hidden = false;
