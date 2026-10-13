@@ -70,7 +70,8 @@ h1 { font: 400 clamp(1.7rem, 7vw, 2.1rem)/1.05 var(--display); margin: 0 0 16px;
   font: 700 2.6rem/1 var(--marker); padding: 8px 16px 4px; border-radius: 6px;
   transform: rotate(-5deg); box-shadow: 0 3px 0 rgba(0,0,0,.18); margin: 2px 0 6px;
 }
-.deal { font-size: .9rem; margin: 6px 0 16px; line-height: 1.5; }
+.deal { font-size: .9rem; margin: 6px 0 6px; line-height: 1.5; }
+.fine { font-size: .72rem; margin: 0 0 16px; line-height: 1.45; opacity: .75; font-style: italic; }
 dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0 0 20px; font-size: .88rem; }
 dt { font-weight: 600; text-transform: uppercase; letter-spacing: .1em; font-size: .72rem; padding-top: 2px; }
 dd { margin: 0; min-width: 0; }
@@ -105,10 +106,10 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
 
     <section id="invite" hidden>
       <p class="lot"><span>Lot #001</span><span>One of one</span></p>
-      <p class="lead">You invited me to your con. Now I'm inviting you to mine.</p>
       <h1>ThriftCon with me?</h1>
-      <span class="price">$150</span>
-      <p class="deal">That's your budget and it's on me. You find it, I'm paying for it. No questions, no judgment on the weird finds.</p>
+      <span class="price">$150 OFF</span>
+      <p class="deal">Your exclusive coupon. Good on anything you find.</p>
+      <p class="fine">Fine print: one per customer. Valid in person only. Must be redeemed with me.</p>
       <dl>
         <dt>When</dt><dd>Saturday, Dec 5 · 10am–5pm</dd>
         <dt>Where</dt><dd>ThriftCon Houston, Reliant Center Hall D</dd>
@@ -122,7 +123,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
 
     <section class="result" id="saidYes" hidden>
       <p class="lot"><span>Lot #001</span><span>Sold</span></p>
-      <h1>It's a date.</h1>
+      <h1>Coupon claimed.</h1>
       <p>Saturday, Dec 5. Start your wishlist now, because $150 goes fast at ThriftCon.</p>
       <p>I'll text you the pickup time.</p>
       <p class="sign">see you there ✶</p>
@@ -131,7 +132,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
     <section class="result" id="saidNo" hidden>
       <p class="lot"><span>Lot #001</span><span>On hold</span></p>
       <h1>All good.</h1>
-      <p>No hard feelings. The offer stays on the rack if you change your mind.</p>
+      <p>No hard feelings. The coupon stays on the rack if you change your mind.</p>
     </section>
 
   </div>
@@ -163,7 +164,7 @@ canvas#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 10; 
   });
 
   $('yes').addEventListener('click', () => {
-    if (!answered) notify('ThriftCon: SHE SAID YES 🛍️', 'Saturday Dec 5. Budget $150. Lock in the pickup time.', 'tada,shopping');
+    if (!answered) notify('ThriftCon: SHE SAID YES 🛍️', 'Coupon claimed for Saturday Dec 5. Lock in the pickup time.', 'tada,shopping');
     answered = true;
     $('invite').hidden = true;
     $('saidYes').hidden = false;
